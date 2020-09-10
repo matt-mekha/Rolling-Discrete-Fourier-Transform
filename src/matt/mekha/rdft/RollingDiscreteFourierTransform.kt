@@ -23,11 +23,15 @@ class RollingDiscreteFourierTransform(
     private val samples = arrayListOf<Double>()
     private val sums = HashMap<Frequency, ComplexNumber>(sampleWindowSize)
 
+    private fun passesNyquistTheorem(frequency: Frequency) : Boolean {
+        return frequency <= sampleWindowSize / 2
+    }
+
     /**
      * populates window, call before rolling or querying a frequency
      */
     fun prepare() {
-        for(x in 0..sampleWindowSize) {
+        for(x in 0 until sampleWindowSize) {
             samples.add(f(x))
             currentSampleX++
         }
@@ -36,8 +40,10 @@ class RollingDiscreteFourierTransform(
             val virtualFrequency = frequency * sampleWindowDuration
 
             var sum = zero
-            for((x, sample) in samples.withIndex()) {
-                sum += ePowI(-2 * PI * virtualFrequency * x / sampleWindowSize) * sample / sampleWindowSize.toDouble() * 2.0
+            if(passesNyquistTheorem(virtualFrequency)) {
+                for((x, sample) in samples.withIndex()) {
+                    sum += ePowI(-2 * PI * virtualFrequency * x / sampleWindowSize) * sample / sampleWindowSize.toDouble() * 2.0
+                }
             }
             sums[frequency] = sum
         }
@@ -54,9 +60,13 @@ class RollingDiscreteFourierTransform(
         for(frequency in frequencies) {
             val virtualFrequency = frequency * sampleWindowDuration
 
-            sums[frequency] = sums[frequency]!!
-                - (ePowI(-2 * PI * virtualFrequency * (currentSampleX - sampleWindowSize) / sampleWindowSize) * removedSample / sampleWindowSize.toDouble() * 2.0)
-                + (ePowI(-2 * PI * virtualFrequency * currentSampleX / sampleWindowSize) * nextSample / sampleWindowSize.toDouble() * 2.0)
+            if (passesNyquistTheorem(virtualFrequency)) {
+                val firstValue = ePowI(-2 * PI * virtualFrequency * (currentSampleX - sampleWindowSize) / sampleWindowSize) * removedSample / sampleWindowSize.toDouble() * 2.0
+                val newValue = ePowI(-2 * PI * virtualFrequency * currentSampleX / sampleWindowSize) * nextSample / sampleWindowSize.toDouble() * 2.0
+                sums[frequency] = sums[frequency]!! - firstValue + newValue
+            } else {
+                println("WARNING: $frequency Hz fails Nyquist Theorem test")
+            }
         }
 
         currentSampleX++
@@ -65,15 +75,8 @@ class RollingDiscreteFourierTransform(
     /**
      * get frequency's presence in f(x)
      */
-    fun getFrequency(frequency: Frequency): ComplexNumber {
-        val virtualFrequency = frequency * sampleWindowDuration
-        if(virtualFrequency > sampleWindowSize/2) return zero // Nyquist Theorem
-
-        var sum = zero
-        for((i, sample) in samples.withIndex()) {
-            sum += ePowI(-2 * PI * virtualFrequency * i / sampleWindowSize) * sample / sampleWindowSize.toDouble() * 2.0
-        }
-        return sum
+    fun getFrequencyAmplitude(frequency: Frequency): ComplexNumber {
+        return sums[frequency]!!
     }
 
 }

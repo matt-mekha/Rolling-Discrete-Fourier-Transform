@@ -15,16 +15,18 @@ class TestClass {
     private fun cos2(x: Double) = cos(x * PI / 180)
 
     private fun assertFrequency(rdft: RollingDiscreteFourierTransform, expected: Int, frequency: Frequency) {
-        assertEquals(expected, round(rdft.getFrequency(frequency).magnitude()).toInt())
+        assertEquals(expected, round(rdft.getFrequencyAmplitude(frequency).magnitude()).toInt())
     }
 
     @Test
-    fun test1() {
+    fun mathematicalTest() {
+        val frequencies = DoubleArray(numFrequencies) { i: Int -> (i+1).toDouble() }.asList()
+
         val rdft = RollingDiscreteFourierTransform(
             { cos2(it * 8.0) + cos2(it * 12.0) },
             360,
             1.0,
-            DoubleArray(numFrequencies) { i: Int -> i.toDouble() }.asList()
+            frequencies
         )
 
         rdft.prepare()
@@ -32,9 +34,9 @@ class TestClass {
             rdft.roll()
         }
 
-        for(i in 1 .. numFrequencies) {
-            val y = round(rdft.getFrequency(i.toDouble()).magnitude() * 100.0) / 100.0
-            println("$i Hz\t:\t$y")
+        for(frequency in frequencies) {
+            val y = round(rdft.getFrequencyAmplitude(frequency).magnitude() * 100.0) / 100.0
+            //println("$frequency Hz\t:\t$y")
         }
 
 
@@ -42,6 +44,11 @@ class TestClass {
         assertFrequency(rdft, 0, 7.0)
         assertFrequency(rdft, 1, 8.0)
         assertFrequency(rdft, 1, 12.0)
+    }
+
+    @Test
+    fun spectrogramTest() {
+        Spectrogram("Morse.wav")
     }
 
 }

@@ -9,6 +9,10 @@ data class ComplexNumber(var r: Double, var i: Double) {
         return ComplexNumber(r + n.r, i + n.i)
     }
 
+    operator fun minus(n: ComplexNumber): ComplexNumber {
+        return ComplexNumber(r - n.r, i - n.i)
+    }
+
     operator fun times(n: Double): ComplexNumber {
         return ComplexNumber(r * n, i * n)
     }
