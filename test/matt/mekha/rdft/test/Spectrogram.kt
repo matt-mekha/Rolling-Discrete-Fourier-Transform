@@ -1,5 +1,6 @@
 package matt.mekha.rdft.test
 
+import matt.mekha.rdft.Frequency
 import matt.mekha.rdft.Function
 import matt.mekha.rdft.RollingDiscreteFourierTransform
 import java.awt.Color
@@ -15,16 +16,18 @@ import javax.swing.JFrame
 import javax.swing.JPanel
 
 
-class Spectrogram(filePath: String) : JPanel() {
+class Spectrogram(
+        filePath: String,
+        private val startFrequency: Frequency,
+        private val endFrequency: Frequency,
+        private val frequencyIncrement: Frequency,
+        private val sampleWindowDuration: Double
+) : JPanel() {
 
-    private val startFrequency = 10
-    private val endFrequency = 10000
-    private val frequencyIncrement = 20
-    private val numFrequencies = (endFrequency - startFrequency) / frequencyIncrement + 1
+    private val numFrequencies = ((endFrequency - startFrequency) / frequencyIncrement).toInt() + 1
     private val frequencies = DoubleArray(numFrequencies) { i: Int -> startFrequency + (i.toDouble() * frequencyIncrement) }.asList()
 
     private val bytesPerSample = 1
-    private val sampleWindowDuration = 0.1
     private val sampleWindowWidth: Int
     private val windowWidth = 1600
     private val pixelsPerSecond = 200
@@ -67,6 +70,7 @@ class Spectrogram(filePath: String) : JPanel() {
             }
             for((y, frequency) in frequencies.withIndex()) {
                 val value = rdft.getFrequencyAmplitude(frequency).magnitude().toFloat().coerceIn(0f, 1f)
+                //val value = (rdft.getFrequencyAmplitude(frequency).magnitude().toFloat() * 10f).coerceIn(0f, 1f)
                 canvas.setRGB(x % windowWidth, numFrequencies - y - 1, Color(value, value, value).rgb)
             }
             repaint()

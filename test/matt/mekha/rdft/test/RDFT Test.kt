@@ -48,7 +48,7 @@ class TestClass {
 
     @Test
     fun spectrogramTest() {
-        Spectrogram("Morse.wav")
+        Spectrogram("Morse.wav", 10.0, 10000.0, 20.0, 0.06)
     }
 
 }
