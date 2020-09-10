@@ -2,7 +2,7 @@ package matt.mekha.rdft
 
 import kotlin.math.PI
 
-typealias Function = (Int) -> Double
+typealias RDFTSampleFunction = (Int) -> Double
 typealias Frequency = Double
 
 /**
@@ -12,10 +12,10 @@ typealias Frequency = Double
  * @param sampleWindowDuration the size of the sample window but in seconds which is used for translating per-second frequencies
  */
 class RollingDiscreteFourierTransform(
-    private val f: Function,
-    private val sampleWindowSize: Int,
-    private val sampleWindowDuration: Double,
-    private val frequencies: List<Frequency>
+        private val f: RDFTSampleFunction,
+        private val sampleWindowSize: Int,
+        private val sampleWindowDuration: Double,
+        private val frequencies: List<Frequency>
 ) {
 
     private var currentSampleX = 0

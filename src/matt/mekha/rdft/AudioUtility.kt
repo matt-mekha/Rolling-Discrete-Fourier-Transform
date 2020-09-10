@@ -9,11 +9,11 @@ import javax.sound.sampled.AudioSystem
 data class AudioSource(
         val duration: Double,
         val sampleRate: Int,
-        val sampleFunction: Function,
+        val sampleFunction: DFTSampleFunction,
         val close: () -> Unit
 )
 
-fun loadAudioFile(filePath: String, bytesPerSample: Int) : AudioSource {
+fun loadAudioFile(filePath: String, bytesPerSample: Int = 1) : AudioSource {
     val audioInputStreamEncoded: AudioInputStream = AudioSystem.getAudioInputStream(File(filePath))
     val audioFormatEncoded = audioInputStreamEncoded.format
     val audioFormatDecoded = AudioFormat(

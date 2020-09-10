@@ -1,7 +1,6 @@
 package matt.mekha.rdft.test
 
 import matt.mekha.rdft.Frequency
-import matt.mekha.rdft.Function
 import matt.mekha.rdft.RollingDiscreteFourierTransform
 import matt.mekha.rdft.loadAudioFile
 import java.awt.Color
@@ -9,10 +8,6 @@ import java.awt.Dimension
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
-import java.io.File
-import javax.sound.sampled.AudioFormat
-import javax.sound.sampled.AudioInputStream
-import javax.sound.sampled.AudioSystem
 import javax.swing.JFrame
 import javax.swing.JPanel
 
