@@ -20,5 +20,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="NetCDF" level="project" />
   </component>
 </module>

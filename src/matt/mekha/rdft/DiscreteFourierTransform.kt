@@ -11,7 +11,7 @@ class DiscreteFourierTransform(val f: DFTSampleFunction, private val numSamples:
 
     private val samples: List<Double> = List(numSamples) { i : Int -> f(xStart + (i * xInc)) }
 
-    fun getFrequencyAmplitude(frequency: Double): ComplexNumber {
+    fun getFrequencyAmplitude(frequency: Frequency): ComplexNumber {
         val virtualFrequency = frequency * duration
         if(virtualFrequency > numSamples/2) return zero // Nyquist Theorem
 
