@@ -3,6 +3,7 @@ package matt.mekha.rdft.test
 import matt.mekha.rdft.Frequency
 import matt.mekha.rdft.Function
 import matt.mekha.rdft.RollingDiscreteFourierTransform
+import matt.mekha.rdft.loadAudioFile
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Graphics
@@ -37,7 +38,7 @@ class Spectrogram(
     private var canvas: BufferedImage
 
     init {
-        val audioSignal = loadAudioFile(filePath)
+        val audioSignal = loadAudioFile(filePath, bytesPerSample)
 
         sampleWindowWidth = (sampleWindowDuration * audioSignal.sampleRate).toInt()
         setSize(windowWidth, numFrequencies)
@@ -89,44 +90,4 @@ class Spectrogram(
         super.paint(g)
         (g as Graphics2D).drawImage(canvas, null, null)
     }
-
-    private fun loadAudioFile(filePath: String) : AudioSource {
-        val audioInputStreamEncoded: AudioInputStream = AudioSystem.getAudioInputStream(File(filePath))
-        val audioFormatEncoded = audioInputStreamEncoded.format
-        val audioFormatDecoded = AudioFormat(
-                AudioFormat.Encoding.PCM_SIGNED,
-                audioFormatEncoded.sampleRate,
-                bytesPerSample * 8,
-                1,
-                bytesPerSample,
-                audioFormatEncoded.sampleRate,
-                true
-        )
-        val audioInputStreamDecoded = AudioSystem.getAudioInputStream(
-                audioFormatDecoded,
-                audioInputStreamEncoded
-        )
-
-        return AudioSource(
-                audioInputStreamDecoded.frameLength.toDouble() / audioFormatDecoded.frameRate,
-                audioFormatDecoded.sampleRate.toInt(),
-                {
-//                    ByteBuffer.wrap(
-//                            audioInputStreamDecoded.readNBytes(bytesPerSample)
-//                    ).short.toDouble() / 32768.0
-                    audioInputStreamDecoded.read().toDouble() / 128.0 - 1.0
-                },
-                {
-                    audioInputStreamDecoded.close()
-                    audioInputStreamEncoded.close()
-                }
-        )
-    }
-
-    data class AudioSource(
-            val duration: Double,
-            val sampleRate: Int,
-            val sampleFunction: Function,
-            val close: () -> Unit
-    )
 }

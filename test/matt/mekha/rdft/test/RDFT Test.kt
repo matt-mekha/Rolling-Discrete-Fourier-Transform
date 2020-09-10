@@ -10,16 +10,15 @@ import kotlin.test.assertEquals
 
 class TestClass {
 
-    private val numFrequencies = 20
-
-    private fun cos2(x: Double) = cos(x * PI / 180)
-
-    private fun assertFrequency(rdft: RollingDiscreteFourierTransform, expected: Int, frequency: Frequency) {
-        assertEquals(expected, round(rdft.getFrequencyAmplitude(frequency).magnitude()).toInt())
-    }
-
     @Test
     fun mathematicalTest() {
+        fun cos2(x: Double) = cos(x * PI / 180)
+
+        fun assertFrequency(rdft: RollingDiscreteFourierTransform, expected: Int, frequency: Frequency) {
+            assertEquals(expected, round(rdft.getFrequencyAmplitude(frequency).magnitude()).toInt())
+        }
+
+        val numFrequencies = 20
         val frequencies = DoubleArray(numFrequencies) { i: Int -> (i+1).toDouble() }.asList()
 
         val rdft = RollingDiscreteFourierTransform(
@@ -48,7 +47,12 @@ class TestClass {
 
     @Test
     fun spectrogramTest() {
-        Spectrogram("Morse.wav", 10.0, 10000.0, 20.0, 0.06)
+        Spectrogram("Radio2.wav", 10.0, 10000.0, 20.0, 0.06)
+    }
+
+    @Test
+    fun headRelatedTransferFunctionTest() {
+        HeadRelatedTransferFunction("Waves.wav", "IRC_1003.sofa")
     }
 
 }
