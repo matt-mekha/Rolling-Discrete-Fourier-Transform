@@ -2,14 +2,11 @@ package matt.mekha.rdft
 
 import kotlin.math.PI
 
-typealias DFTSampleFunction = (Double) -> Double
+typealias DFTSampleFunction = (Int) -> Double
 
-class DiscreteFourierTransform(val f: DFTSampleFunction, private val numSamples: Int, x0: Double, x1: Double, private val duration: Double) {
+class DiscreteFourierTransform(f: DFTSampleFunction, private val numSamples: Int, private val duration: Double) {
 
-    private val xStart = x0
-    private val xInc = (x1 - x0) / numSamples
-
-    private val samples: List<Double> = List(numSamples) { i : Int -> f(xStart + (i * xInc)) }
+    private val samples: List<Double> = List(numSamples, f)
 
     fun getFrequencyAmplitude(frequency: Frequency): ComplexNumber {
         val virtualFrequency = frequency * duration

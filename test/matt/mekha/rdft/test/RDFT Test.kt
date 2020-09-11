@@ -47,12 +47,12 @@ class TestClass {
 
     @Test
     fun spectrogramTest() {
-        Spectrogram("Radio2.wav", 10.0, 10000.0, 20.0, 0.06)
+        Spectrogram("Radio2.wav", 10.0, 10000.0, 20.0, 0.1, 200)
     }
 
     @Test
     fun headRelatedTransferFunctionTest() {
-        HeadRelatedTransferFunction("Waves.wav", "IRC_1003.sofa")
+        val hrtf = HeadRelatedTransferFunction("HRTF/MIT_KEMAR.sofa")
     }
 
 }

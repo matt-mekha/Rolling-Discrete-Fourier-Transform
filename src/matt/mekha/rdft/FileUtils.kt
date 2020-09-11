@@ -9,7 +9,7 @@ import javax.sound.sampled.AudioSystem
 data class AudioSource(
         val duration: Double,
         val sampleRate: Int,
-        val sampleFunction: DFTSampleFunction,
+        val sampleFunction: RDFTSampleFunction,
         val close: () -> Unit
 )
 

@@ -17,7 +17,8 @@ class Spectrogram(
         private val startFrequency: Frequency,
         private val endFrequency: Frequency,
         private val frequencyIncrement: Frequency,
-        private val sampleWindowDuration: Double
+        private val sampleWindowDuration: Double,
+        private val pixelsPerSecond: Int
 ) : JPanel() {
 
     private val numFrequencies = ((endFrequency - startFrequency) / frequencyIncrement).toInt() + 1
@@ -26,7 +27,6 @@ class Spectrogram(
     private val bytesPerSample = 1
     private val sampleWindowWidth: Int
     private val windowWidth = 1600
-    private val pixelsPerSecond = 200
     private val rollsPerPixel: Int
 
     private val rdft: RollingDiscreteFourierTransform
