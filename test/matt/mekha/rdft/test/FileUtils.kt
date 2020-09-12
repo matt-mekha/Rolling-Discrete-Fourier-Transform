@@ -1,7 +1,11 @@
-package matt.mekha.rdft
+package matt.mekha.rdft.test
 
+import matt.mekha.rdft.RDFTSampleFunction
 import java.io.File
+import java.io.PrintWriter
 import java.nio.ByteBuffer
+import java.util.stream.Collectors
+import java.util.stream.Stream
 import javax.sound.sampled.AudioFormat
 import javax.sound.sampled.AudioInputStream
 import javax.sound.sampled.AudioSystem
@@ -34,7 +38,7 @@ fun loadAudioFile(filePath: String, bytesPerSample: Int = 1) : AudioSource {
             audioInputStreamDecoded.frameLength.toDouble() / audioFormatDecoded.frameRate,
             audioFormatDecoded.sampleRate.toInt(),
             {
-                when(bytesPerSample) {
+                when (bytesPerSample) {
                     1 -> audioInputStreamDecoded.read().toDouble() / 128.0 - 1.0
                     2 -> ByteBuffer.wrap(audioInputStreamDecoded.readNBytes(bytesPerSample)).short.toDouble() / 32768.0
                     else -> 0.0
@@ -45,4 +49,14 @@ fun loadAudioFile(filePath: String, bytesPerSample: Int = 1) : AudioSource {
                 audioInputStreamEncoded.close()
             }
     )
+}
+
+fun saveCsv(filePath: String, data: Iterable<Iterable<*>>) {
+    val file = File(filePath)
+
+    val pw = PrintWriter(file)
+    for(row in data) {
+        pw.println(row.joinToString(","))
+    }
+    pw.close()
 }

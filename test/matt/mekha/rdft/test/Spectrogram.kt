@@ -2,7 +2,6 @@ package matt.mekha.rdft.test
 
 import matt.mekha.rdft.Frequency
 import matt.mekha.rdft.RollingDiscreteFourierTransform
-import matt.mekha.rdft.loadAudioFile
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Graphics
@@ -65,7 +64,7 @@ class Spectrogram(
                 canvas = BufferedImage(windowWidth, numFrequencies, BufferedImage.TYPE_INT_RGB)
             }
             for((y, frequency) in frequencies.withIndex()) {
-                val value = rdft.getFrequencyAmplitude(frequency).magnitude().toFloat().coerceIn(0f, 1f)
+                val value = rdft.getFrequencyAmplitude(frequency).magnitude.toFloat().coerceIn(0f, 1f)
                 //val value = (rdft.getFrequencyAmplitude(frequency).magnitude().toFloat() * 10f).coerceIn(0f, 1f)
                 canvas.setRGB(x % windowWidth, numFrequencies - y - 1, Color(value, value, value).rgb)
             }

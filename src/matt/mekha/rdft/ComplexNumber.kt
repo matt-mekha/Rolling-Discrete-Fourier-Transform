@@ -1,5 +1,6 @@
 package matt.mekha.rdft
 
+import kotlin.math.atan2
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -29,9 +30,15 @@ data class ComplexNumber(var r: Double, var i: Double) {
         return ComplexNumber(-r, -i)
     }
 
-    fun magnitude(): Double {
-        return sqrt(r.pow(2) + i.pow(2))
+    operator fun times(n: ComplexNumber): ComplexNumber {
+        return ComplexNumber(r * n.r - i * n.i, i * n.r + r * n.i)
     }
+
+    val magnitude : Double
+        get() = sqrt(r.pow(2) + i.pow(2))
+
+    val theta : Double
+        get() = atan2(i, r)
 
 }
 

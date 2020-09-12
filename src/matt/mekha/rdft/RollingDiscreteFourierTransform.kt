@@ -23,6 +23,9 @@ class RollingDiscreteFourierTransform(
     private val samples = arrayListOf<Double>()
     private val sums = HashMap<Frequency, ComplexNumber>(sampleWindowSize)
 
+    val latestSample
+        get() = samples.last()
+
     private fun passesNyquistTheorem(frequency: Frequency) : Boolean {
         return frequency <= sampleWindowSize / 2
     }
@@ -31,6 +34,10 @@ class RollingDiscreteFourierTransform(
      * populates window, call before rolling or querying a frequency
      */
     fun prepare() {
+        currentSampleX = 0
+        samples.clear()
+        sums.clear()
+
         for(x in 0 until sampleWindowSize) {
             samples.add(f(x))
             currentSampleX++

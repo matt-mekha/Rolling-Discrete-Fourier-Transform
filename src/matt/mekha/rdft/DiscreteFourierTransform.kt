@@ -1,12 +1,14 @@
 package matt.mekha.rdft
 
 import kotlin.math.PI
+import kotlin.math.absoluteValue
 
 typealias DFTSampleFunction = (Int) -> Double
 
 class DiscreteFourierTransform(f: DFTSampleFunction, private val numSamples: Int, private val duration: Double) {
 
     private val samples: List<Double> = List(numSamples, f)
+    val averageMagnitude = samples.map { it.absoluteValue }.average()
 
     fun getFrequencyAmplitude(frequency: Frequency): ComplexNumber {
         val virtualFrequency = frequency * duration
